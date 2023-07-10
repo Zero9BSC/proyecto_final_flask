@@ -5,28 +5,39 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agregar producto</title>
+    <title>Nuevo Profesional</title>
     <link rel="stylesheet" href="css/estilos.css">
 </head>
 
 <body>
-    <h1>Agregar Productos al Inventario</h1>
+    <h1>Nuevo Profesional</h1>
     <div class="img"><img src="img/logo_codo.png" alt="codoacodo" width="100px"></div>
     <h3>Codo a Codo 2023</h3>
     <form id="formulario">
-        <label for="codigo">Código:</label>
-        <input type="text" id="codigo" name="codigo" required><br>
+        <label for="Matrícula Nacional">Matrícula Nacional:</label>
+        <input type="text" id="Matrícula Nacional" name="Matrícula Nacional" required><br>
 
-        <label for="descripcion">Descripción:</label>
-        <input type="text" id="descripcion" name="descripcion" required><br>
+        <label for="Apellido-Nombre">Apellido-Nombre:</label>
+        <input type="text" id="Apellido-Nombre" name="Apellido-Nombre" required><br>
 
-        <label for="cantidad">Cantidad:</label>
-        <input type="number" id="cantidad" name="cantidad" required><br>
+        <label for="DNI">DNI:</label>
+        <input type="number" id="DNI" name="DNI" required><br>
 
-        <label for="precio">Precio:</label>
-        <input type="number" step="0.01" id="precio" name="precio" required><br>
+        <label for="CUIT">CUIT:</label>
+        <input type="number" id="CUIT" name="CUIT" required><br>
 
-        <button type="submit">Agregar Producto</button>
+        <label for="Profesión">Profesión:</label>
+        <input type="text" id="Profesión" name="Profesión" required><br>
+
+        <label for="Celular">Celular:</label>
+        <input type="Celular" id="Celular" name="Celular" required><br>
+
+        <label for="mail">mail:</label>
+        <input type="mail" id="mail" name="mail" required><br>
+
+        
+
+        <button type="submit">Grabar</button>
         <a href="index.html">Menu principal</a>
     </form>
 
@@ -38,26 +49,32 @@
             event.preventDefault(); // Evitamos que se envie el form por ahora
 
             // Obtenemos los valores del formulario
-            var codigo = document.getElementById('codigo').value;
-            var descripcion = document.getElementById('descripcion').value;
-            var cantidad = document.getElementById('cantidad').value;
-            var precio = document.getElementById('precio').value;
+            var Matrícula = document.getElementById('Matrícula Nacional').value;
+            var ApellidoNombre = document.getElementById('Apellido-Nombre').value;
+            var DNI = document.getElementById('DNI').value;
+            var CUIT = document.getElementById('CUIT').value;
+            var Profesión = document.getElementById('Profesión').value;
+            var Celular = document.getElementById('Celular').value;
+            var mail = document.getElementById('mail').value;
 
             // Creamos un objeto con los datos del producto
-            var producto = {
-                codigo: codigo,
-                descripcion: descripcion,
-                cantidad: cantidad,
-                precio: precio
+            var profesional = {
+                Matrícula: Matrícula,
+                ApellidoNombre: ApellidoNombre,
+                DNI: DNI,
+                CUIT: CUIT,
+                Profesión: Profesión,
+                Celular: Celular,
+                mail:mail,
             };
-            console.log(producto)
+            console.log(profesional)
             // Realizamos la solicitud POST al servidor
-            fetch(URL + 'productos', {
+            fetch(URL + 'profesional', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(producto)
+                body: JSON.stringify(profesional)
             })
                 .then(function (response) {
                     // Código para manejar la respuesta
@@ -66,20 +83,25 @@
                     } else {
                         // Si hubo un error, lanzar explícitamente una excepción
                         // para ser "catcheada" más adelante
-                        throw new Error('Error al agregar el producto.');
+                        throw new Error('Error al agregar el profesional.');
                     }
                 })
                 .then(function (data) {
-                    alert('Producto agregado correctamente.');
+                    alert('Profesional agregado correctamente.');
                     //Limpiamos el formulario.
-                    document.getElementById('codigo').value = "";
-                    document.getElementById('descripcion').value = "";
-                    document.getElementById('cantidad').value = "";
-                    document.getElementById('precio').value = "";
+                    document.getElementById('Matrícula Nacional').value = "";
+                    document.getElementById('Apellido-Nombre').value = "";
+                    document.getElementById('DNI').value = "";
+                    document.getElementById('CUIT').value = "";
+                    document.getElementById('Profesión').value = "";
+                    document.getElementById('Celular').value = "";
+                    document.getElementById('mail').value = "";
+
+                    
                 })
                 .catch(function (error) {
                     // Código para manejar errores
-                    alert('Error al agregar el producto.');
+                    alert('Error al agregar el profesional.');
                 });
         })
     </script>

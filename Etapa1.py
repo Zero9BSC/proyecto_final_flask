@@ -1,19 +1,26 @@
 # -------------------------------------------------------------------
-# Definimos la clase "Producto"
+# Definimos la clase "Profesional"
 # -------------------------------------------------------------------
-class Producto:
+class Profesional:
     # Definimos el constructor e inicializamos los atributos de instancia
-    def __init__(self, codigo, descripcion, cantidad, precio):
-        self.codigo = codigo           # Código del producto
-        self.descripcion = descripcion # Descripción del producto
-        self.cantidad = cantidad       # Cantidad disponible del producto
-        self.precio = precio           # Precio del producto
+    def __init__(self, Matrícula, ApellidoNombre, DNI, CUIT, Profesión, Celular, mail):
+        self.Matrícula = Matrícula          # Matricula Nacional
+        self.ApellidoNombre = ApellidoNombre # Apellido-Nombre
+        self.DNI = DNI       # DNI
+        self.CUIT = CUIT          # CUIT
+        self.Profesión = Profesión           # Profesión
+        self.Celular = Celular          # Celular
+        self.mail = mail           # Mail
 
-    # Este método permite modificar un producto.
-    def modificar(self, nueva_descripcion, nueva_cantidad, nuevo_precio):
-        self.descripcion = nueva_descripcion  # Modifica la descripción del producto
-        self.cantidad = nueva_cantidad        # Modifica la cantidad del producto
-        self.precio = nuevo_precio            # Modifica el precio del producto
+    # Este método permite modificar el profesional.
+    def modificar(self, nueva_Matrícula, nuevo_ApellidoNombre, nuevo_DNI, nuevo_CUIT, nueva_Profesión, nuevo_Celular, nuevo_mail):
+        self.Matrícula = nueva_Matrícula  # Modifica la Matricula
+        self.ApellidoNombre = nuevo_ApellidoNombre       # Modifica el Apellido y Nombre
+        self.DNI = nuevo_DNI            # Modifica el DNI
+        self.CUIT = nuevo_CUIT           # Modifica el CUIT
+        self.Profesión = nueva_Profesión            # Modifica la profesion
+        self.Celular = nuevo_Celular            # Modifica el Celular
+        self.mail = nuevo_mail           # Modifica Mail
 
 
 # -------------------------------------------------------------------
@@ -23,128 +30,57 @@ class Producto:
 class Inventario:
     # Definimos el constructor e inicializamos los atributos de instancia
     def __init__(self):
-        self.productos = []  # Lista de productos en el inventario (variable de clase)
+        self.Profesional = []  # Lista de profesional en el inventario (variable de clase)
 
 
-    # Este método permite crear objetos de la clase "Producto" y
+    # Este método permite crear objetos de la clase "Profesional" y
     # agregarlos al inventario.
-    def agregar_producto(self, codigo, descripcion, cantidad, precio):
-        nuevo_producto = Producto(codigo, descripcion, cantidad, precio)
-        self.productos.append(nuevo_producto)  # Agrega un nuevo producto a la lista
+    def agregar_Profesional(self, Matrícula, ApellidoNombre, DNI, CUIT, Profesíon, Celular, mail):
+        nuevo_Profesional = Profesional(Matrícula, ApellidoNombre, DNI, CUIT, Profesíon, Celular, mail)
+        self.Profesional.append(nuevo_Profesional)  # Agrega un nuevo profesional a la lista
 
 
-    # Este método permite consultar datos de productos que están en el inventario
-    # Devuelve el producto correspondiente al código proporcionado o False si no existe.
-    def consultar_producto(self, codigo):
-        for producto in self.productos:
-            if producto.codigo == codigo:
-                return producto
+    # Este método permite consultar datos de profesional que están en el inventario
+    # Devuelve el profesional correspondiente al código proporcionado o False si no existe.
+    def consultar_Profesional(self, Matrícula):
+        for Profesional in self.Profesional:
+            if Profesional.Matrícula == Matrícula:
+                return Profesional
         return False
 
 
-    # Este método permite modificar datos de productos que están en el inventario
-    # Utiliza el método consultar_producto del inventario y modificar del producto.
-    def modificar_producto(self, codigo, nueva_descripcion, nueva_cantidad, nuevo_precio):
-        producto = self.consultar_producto(codigo)
-        if producto:
-            producto.modificar(nueva_descripcion, nueva_cantidad, nuevo_precio)
+    # Este método permite modificar datos de profesional que están en el inventario
+    # Utiliza el método consultar_profesional del inventario y modificar del profesional.
+    def modificar_Profesional(self, Matrícula, nuevo_ApellidoNombre, nuevo_DNI, nuevo_CUIT, nueva_Profesional, nuevo_Celular, nuevo_mail):
+        Profesional = self.consultar_Profesional(Matrícula)
+        if Profesional:
+            Profesional.modificar(nuevo_ApellidoNombre, nuevo_DNI, nuevo_CUIT,nueva_Profesional, nuevo_Celular, nuevo_mail )
             print("-"*50)
-            print(f'Producto modificado:\nCódigo: {producto.codigo}\nDescripción: {producto.descripcion}\nCantidad: {producto.cantidad}\nPrecio: {producto.precio}')
+            print(f'Profesional modificado:\nMatrícula: {Profesional.Matrícula}\nApellidoNombre: {Profesional.ApellidoNombre}\nDNI: {Profesional.DNI}\nCUIT: {Profesional.CUIT}\nProfesión: {Profesional.Profesión}\nCelular: {Profesional.Celular}\nmail: {Profesional.mail}')
 
 
-    # Este método elimina el producto indicado por codigo de la lista
+    # Este método elimina el profesional indicado por la matricula de la lista
     # mantenida en el inventario
-    def eliminar_producto(self, codigo):
-        for producto in self.productos:
-            if producto.codigo == codigo:
-                self.productos.remove(producto)
-                print("Producto {codigo} eliminado.")
+    def eliminar_profesional(self, Matrícula):
+        for Profesional in self.Profesional:
+            if Profesional.Matrícula == Matrícula:
+                self.profesional.remove(Profesional)
+                print("Profesional {Matrícula} eliminado.")
                 break
         else:
-            print("Producto {codigo} no encontrado.")
+            print("Profesional {Matrícula} no encontrado.")
 
 
     # Este método imprime en la terminal una lista con los datos de los
-    # productos que figuran en el inventario.
-    def listar_productos(self):
+    # profesionales que figuran en el inventario.
+    def listar_Profesional(self):
         print("-"*50)
-        print("INVENTARIO - Lista de productos:")
-        print("Código\tDescripción\t\tCant\tPrecio")
-        for producto in self.productos:
-            print(f'{producto.codigo}\t{producto.descripcion}\t{producto.cantidad}\t{producto.precio}')
+        print("INVENTARIO - Lista de profesional:")
+        print("Matrícula Nacional\tApellido-Nombre\t\tDNI\tCUIT\tProfesión\tCelular\tmail")
+        for Profesional in self.Profesional:
+            print(f'{Profesional.Matrícula}\t{Profesional.ApellidoNombre}\t{Profesional.DNI}\t{Profesional.CUIT}\t{Profesional.Profesión}\t{Profesional.Celular}\t{Profesional.mail}')
         print("-"*50)
 
-
-
-
-# -------------------------------------------------------------------
-# Definimos la clase "Carrito"
-# -------------------------------------------------------------------
-class Carrito:
-    # Definimos el constructor e inicializamos los atributos de instancia
-    def __init__(self):
-        self.items = []  # Lista de items en el carrito (variable de clase)
-
-
-    # Este método permite agregar productos del inventario al carrito.
-    def agregar(self, codigo, cantidad, inventario):
-        # Nos aseguramos que el producto esté en el inventario
-        producto = inventario.consultar_producto(codigo)
-        if producto is False:
-            print("El producto no existe.")
-            return False
-
-        # Verificamos que la cantidad en stock sea suficiente
-        if producto.cantidad < cantidad:
-            print("Cantidad en stock insuficiente.")
-            return False
-
-        # Si existe y hay stock, vemos si ya existe en el carrito.
-        for item in self.items:
-            if item.codigo == codigo:
-                item.cantidad += cantidad
-                # Actualizamos la cantidad en el inventario restando la cantidad ya que se agrega al carrito
-                producto = inventario.consultar_producto(codigo)
-                producto.modificar(producto.descripcion, producto.cantidad - cantidad, producto.precio)
-                return True
-
-        # Si no existe en el carrito, lo agregamos como un nuevo item.
-        nuevo_item = Producto(codigo, producto.descripcion, cantidad, producto.precio)
-        self.items.append(nuevo_item)
-        # Actualizamos la cantidad en el inventario restando la cantidad ya que se agrega al carrito
-        producto = inventario.consultar_producto(codigo)
-        producto.modificar(producto.descripcion, producto.cantidad - cantidad, producto.precio)
-        return True
-
-
-    # Este método quita unidades de un elemento del carrito, o lo elimina.
-    def quitar(self, codigo, cantidad, inventario):
-        for item in self.items:
-            if item.codigo == codigo:
-                if cantidad > item.cantidad:
-                    print("Cantidad a quitar mayor a la cantidad en el carrito.")
-                    return False
-                item.cantidad -= cantidad
-                print(f'Se ha/n eliminado {cantidad} ítem/s del producto {codigo} en el carrito.')
-                if item.cantidad == 0:
-                    self.items.remove(item)
-                    print(f'Producto {codigo} eliminado del carrito.')
-                # Actualizamos la cantidad en el inventario
-                producto = inventario.consultar_producto(codigo)
-                producto.modificar(producto.descripcion, producto.cantidad + cantidad, producto.precio)
-                return True
-
-        # Si el bucle finaliza sin novedad, es que ese producto NO ESTA en el carrito.
-        print("El producto no se encuentra en el carrito.")
-        return False
-
-    def mostrar(self):
-        print("-"*50)
-        print("CARRITO - Lista de productos:")
-        print("Código\tDescripción\t\tCant\tPrecio")
-        for item in self.items:
-            print(f'{item.codigo}\t{item.descripcion}\t{item.cantidad}\t{item.precio}')
-        print("-"*50)
 
 
 # -------------------------------------------------------------------
@@ -154,8 +90,6 @@ class Carrito:
 # Crear una instancia de la clase Inventario
 mi_inventario = Inventario()
 
-# Crear una instancia de la clase Carrito
-mi_carrito = Carrito()
 
 # Crear 3 productos y agregarlos al inventario
 mi_inventario.agregar_producto(1, 'Teclado USB 101 teclas', 10, 4500)

@@ -9,17 +9,20 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-# Crear la tabla 'productos' si no existe
+# Crear la tabla 'Profesional' si no existe
 def create_table():
-    print("Creando tabla productos...") # Para probar que se ejecuta la función
+    print("Creando tabla Profesional...") # Para probar que se ejecuta la función
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS productos (
-            codigo INTEGER PRIMARY KEY,
-            descripcion TEXT NOT NULL,
-            cantidad INTEGER NOT NULL,
-            precio REAL NOT NULL
+        CREATE TABLE IF NOT EXISTS Profesional (
+            Matrícula Nacional INTEGER PRIMARY KEY,
+            Apellido-Nombre TEXT NOT NULL,
+            DNI INTEGER NOT NULL,
+            CUIT REAL NOT NULL
+            Profesión TEXT NOT NULL,
+            Celular INTEGER NOT NULL,
+            mail INTEGER NOT NULL        
         ) ''')
     conn.commit()
     cursor.close()
@@ -38,21 +41,24 @@ create_database()
 
 
 # -------------------------------------------------------------------
-# Definimos la clase "Producto"
+# Definimos la clase "Profesional"
 # -------------------------------------------------------------------
-class Producto:
+class Profesional:
     # Definimos el constructor e inicializamos los atributos de instancia
-    def __init__(self, codigo, descripcion, cantidad, precio):
-        self.codigo = codigo           # Código 
-        self.descripcion = descripcion # Descripción
-        self.cantidad = cantidad       # Cantidad disponible (stock)
-        self.precio = precio           # Precio 
+    def __init__(self, Matrícula, ApellidoNombre, DNI, CUIT, Profesión, Celular, mail):
+        self.Matrícula = Matrícula           # Matrícula 
+        self.ApellidoNombre = ApellidoNombre # ApellidoNombre
+        self.DNI = DNI       # DNI 
+        self.CUIT = CUIT          # CUIT
+        self.Profesión = Profesión  # Profesion
+        self.Celular = Celular # Celular
+        self.mail = mail # mail
 
-    # Este método permite modificar un producto.
-    def modificar(self, nueva_descripcion, nueva_cantidad, nuevo_precio):
-        self.descripcion = nueva_descripcion  # Modifica la descripción
-        self.cantidad = nueva_cantidad        # Modifica la cantidad
-        self.precio = nuevo_precio            # Modifica el precio
+    # Este método permite modificar un profesional.
+    def modificar(self, nuevo_ApellidoNombre, nuevo_DNI, nuevo_CUIT, nueva_Profesión, nuevo_Celular, nuevo_Mail):
+        self.ApellidoNombre = nuevo_ApellidoNombre  # Modifica El apellido y nombre
+        self.DNI = nuevo_DNI        # Modifica el DNI
+        self.CUIT = nuevo_CUIT            # Modifica el CUIT
 
 
 # -------------------------------------------------------------------
@@ -63,114 +69,56 @@ class Inventario:
         self.conexion = get_db_connection()
         self.cursor = self.conexion.cursor()
 
-    def agregar_producto(self, codigo, descripcion, cantidad, precio):
-        producto_existente = self.consultar_producto(codigo)
-        if producto_existente:
-            print("Ya existe un producto con ese código.")
+    def agregar_profesional(self, Matrícula, ApellidoNombre, DNI, CUIT, Profesión, Celular, mail):
+        profesional_existente = self.consultar_profesional(Matrícula)
+        if profesional_existente:
+            print("Ya existe un profesional con esa Matrícula.")
             return False
-        nuevo_producto = Producto(codigo, descripcion, cantidad, precio)
-        sql = f'INSERT INTO productos VALUES ({codigo}, "{descripcion}", {cantidad}, {precio});'
+        nuevo_profesional = Profesional(Matrícula, ApellidoNombre, DNI, CUIT, Profesión, Celular, mail)
+        sql = f'INSERT INTO profesional VALUES ({Matrícula}, "{ApellidoNombre}", {DNI}, {CUIT}, "{Profesión}", {Celular}, "{mail}");'
         self.cursor.execute(sql)
         self.conexion.commit()
         return True
 
-    def consultar_producto(self, codigo):
-        sql = f'SELECT * FROM productos WHERE codigo = {codigo};'
+    def consultar_profesional(self, Matrícula):
+        sql = f'SELECT * FROM profesional WHERE Matrícula = {Matrícula};'
         self.cursor.execute(sql)
         row = self.cursor.fetchone()
         if row:
-            codigo, descripcion, cantidad, precio = row
-            return Producto(codigo, descripcion, cantidad, precio)
+            Matrícula, ApellidoNombre, DNI, CUIT, Profesión, Celular, mail = row
+            return Profesional(Matrícula, ApellidoNombre, DNI, CUIT,Profesión, Celular, mail )
         return False
 
-    def modificar_producto(self, codigo, nueva_descripcion, nueva_cantidad, nuevo_precio):
-        producto = self.consultar_producto(codigo)
-        if producto:
-            producto.modificar(nueva_descripcion, nueva_cantidad, nuevo_precio)
-            sql = f'UPDATE productos SET descripcion = "{nueva_descripcion}", cantidad = {nueva_cantidad}, precio = {nuevo_precio} WHERE codigo = {codigo};' 
+    def modificar_profesional(self, Matrícula, nuevo_ApellidoNombre, nuevo_DNI, nuevo_CUIT, nueva_Profesión, nuevo_Celular, nuevo_mail):
+        Profesional = self.consultar_profesional(Matrícula)
+        if Profesional:
+            Profesional.modificar(nuevo_ApellidoNombre, nuevo_DNI, nuevo_CUIT, nueva_Profesión, nuevo_Celular, nuevo_mail)
+            sql = f'UPDATE Profesional SET Matrícula = "{nuevo_ApellidoNombre}", DNI = {nuevo_DNI}, CUIT = {nuevo_CUIT}, Profesión = {nueva_Profesión}, Celular = {nuevo_Celular}, mail = {nuevo_mail} WHERE Matrícula = {Matrícula};' 
             print("-"*50)
-            print(f'Producto modificado:\nCódigo: {producto.codigo}\nDescripción: {producto.descripcion}\nCantidad: {producto.cantidad}\nPrecio: {producto.precio}')
+            print(f'Profesional modificado:\nMatrícula: {Profesional.Matrícula}\nApellidoNombre: {Profesional.ApellidoNombre}\nDNI: {Profesional.DNI}\nCUIT: {Profesional.CUIT}\nProfesión: {Profesional.Profesión}\nCelular: {Profesional.Celular}\nmail: {Profesional.mail}')
             self.cursor.execute(sql)
             self.conexion.commit()
 
-    def eliminar_producto(self, codigo):
-        sql = f'DELETE FROM productos WHERE codigo = {codigo};' 
+    def eliminar_profesional(self, Matrícula):
+        sql = f'DELETE FROM Profesional WHERE Matrícula = {Matrícula};' 
         self.cursor.execute(sql)
         if self.cursor.rowcount > 0:
-            print(f'Producto {codigo} eliminado.')
+            print(f'Profesional {Matrícula} eliminado.')
             self.conexion.commit()
         else:
-            print(f'Producto {codigo} no encontrado.')
+            print(f'Profesional {Matrícula} no encontrado.')
 
-    def listar_productos(self):
+    def listar_profesional(self):
         print("-"*50)
-        print("INVENTARIO - Lista de productos:")
-        print("Código\tDescripción\tCant\tPrecio")
-        self.cursor.execute("SELECT * FROM productos")
+        print("INVENTARIO - Lista de Profesional:")
+        print("Matrícula Nacional\tApellido-Nombre\tDNI\tCUIT\tProfesión\tCelular\tmail")
+        self.cursor.execute("SELECT * FROM Profesional")
         rows = self.cursor.fetchall()
         for row in rows:
-            codigo, descripcion, cantidad, precio = row
-            print(f'{codigo}\t{descripcion}\t{cantidad}\t{precio}')
+            Matrícula, ApellidoNombre, DNI, CUIT, Profesión, Celular, mail = row
+            print(f'{Matrícula}\t{ApellidoNombre}\t{DNI}\t{CUIT}\t{Profesión}\t{Celular}\t{mail}')
         print("-"*50)
 
-
-
-# -------------------------------------------------------------------
-# Definimos la clase "Carrito"
-# -------------------------------------------------------------------
-class Carrito:
-    def __init__(self):
-        self.conexion = sqlite3.connect('inventario.db')  # Conexión a la BD
-        self.cursor = self.conexion.cursor()
-        self.items = []
-
-    def agregar(self, codigo, cantidad, inventario):
-        producto = inventario.consultar_producto(codigo)
-        if producto is False:
-            print("El producto no existe.")
-            return False
-        if producto.cantidad < cantidad:
-            print("Cantidad en stock insuficiente.")
-            return False
-
-        for item in self.items:
-            if item.codigo == codigo:
-                item.cantidad += cantidad
-                sql = f'UPDATE productos SET cantidad = cantidad - {cantidad}  WHERE codigo = {codigo};'
-                self.cursor.execute(sql)
-                self.conexion.commit()
-                return True
-
-        nuevo_item = Producto(codigo, producto.descripcion, cantidad, producto.precio)
-        self.items.append(nuevo_item)
-        sql = f'UPDATE productos SET cantidad = cantidad - {cantidad}  WHERE codigo = {codigo};'
-        self.cursor.execute(sql)
-        self.conexion.commit()
-        return True
-
-    def quitar(self, codigo, cantidad, inventario):
-        for item in self.items:
-            if item.codigo == codigo:
-                if cantidad > item.cantidad:
-                    print("Cantidad a quitar mayor a la cantidad en el carrito.")
-                    return False
-                item.cantidad -= cantidad
-                print(f'Se ha/n eliminado {cantidad} ítem/s del producto {codigo} en el carrito.')
-                if item.cantidad == 0:
-                    self.items.remove(item)
-                    print(f'Producto {codigo} eliminado del carrito.')
-                sql = f'UPDATE productos SET cantidad = cantidad + {cantidad} WHERE codigo = {codigo};'
-                self.cursor.execute(sql)
-                self.conexion.commit()
-                return True
-    
-    def mostrar(self):
-        print("-"*50)
-        print("CARRITO - Lista de productos:")
-        print("Código\tDescripción\tCant\tPrecio")
-        for item in self.items:
-            print(f'{item.codigo}\t{item.descripcion}\t{item.cantidad}\t{item.precio}')
-        print("-"*50)
 
 
 # -------------------------------------------------------------------

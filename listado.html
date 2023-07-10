@@ -5,24 +5,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado de Productos</title>
+    <title>Listado de Profesional</title>
     <link rel="stylesheet" href="css/estilos.css">
 </head>
 
 <body>
-    <h1>Listado de Productos</h1>
+    <h1>Listado de Profesional</h1>
     <div class="img"><img src="img/logo_codo.png" alt="codoacodo" width="100px"></div>
     <h3>Codo a Codo 2023</h3>
     <table>
         <thead>
             <tr>
-                <th>Código</th>
-                <th>Descripción</th>
-                <th>Cantidad</th>
-                <th align="right">Precio</th>
+                <th>Matrícula Nacional</th>
+                <th>Apellido-Nombre</th>
+                <th>DNI</th>
+                <th>CUIT</th>
+                <th>Profesión</th>
+                <th>Celular</th>
+                <th>mail</th>
+                
             </tr>
         </thead>
-        <tbody id="tablaProductos">
+        <tbody id="tablaProfesional">
         </tbody>
     </table>
 
@@ -35,32 +39,35 @@
         const URL = "https://zero9bsc.pythonanywhere.com/"
 
         // Realizamos la solicitud GET al servidor para obtener todos los productos
-        fetch(URL + 'productos')
+        fetch(URL + 'Profesional')
             .then(function (response) {
                 if (response.ok) {
                     return response.json(); // Parseamos la respuesta JSON
                 } else {
                     // Si hubo un error, lanzar explícitamente una excepción
                     // para ser "catcheada" más adelante
-                    throw new Error('Error al obtener los productos.');
+                    throw new Error('Error al obtener los Profesionales.');
                 }
             })
             .then(function (data) {
-                var tablaProductos = document.getElementById('tablaProductos');
+                var tablaProfesional = document.getElementById('tablaProfesional');
 
-                // Iteramos sobre los productos y agregamos filas a la tabla
+                // Iteramos sobre los profesionales y agregamos filas a la tabla
                 data.forEach(function (producto) {
                     var fila = document.createElement('tr');
-                    fila.innerHTML = '<td>' + producto.codigo + '</td>' +
-                        '<td>' + producto.descripcion + '</td>' +
-                        '<td align="right">' + producto.cantidad + '</td>' +
-                        '<td align="right">&nbsp; &nbsp;&nbsp; &nbsp;' + producto.precio + '</td>';
-                    tablaProductos.appendChild(fila);
+                    fila.innerHTML = '<td>' + Profesional.Matrícula + '</td>' +
+                        '<td>' + Profesional.ApellidoNombre + '</td>' +
+                        '<td align="right">' + Profesional.DNI + '</td>' +
+                        '<td align="right">&nbsp; &nbsp;&nbsp; &nbsp;' + Profesional.CUIT + '</td>'
+                        '<td align="right">&nbsp; &nbsp;&nbsp; &nbsp;' + Profesional.Profesión + '</td>'
+                        '<td align="right">&nbsp; &nbsp;&nbsp; &nbsp;' + Profesional.Celular + '</td>'
+                        '<td align="right">&nbsp; &nbsp;&nbsp; &nbsp;' + Profesional.mail + '</td>';
+                    tablaProfesional.appendChild(fila);
                 });
             })
             .catch(function (error) {
                 // Código para manejar errores
-                alert('Error al obtener los productos.');
+                alert('Error al obtener los profesionales.');
             });
     </script>
 </body>
