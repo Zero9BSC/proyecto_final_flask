@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask,  jsonify, request
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 
@@ -12,7 +12,7 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-# Crear la tabla 'Profesional' si no existe
+# Crear la tabla 'profesional' si no existe
 def create_table():
     print("Creando tabla Profesionales...") # Para probar que se ejecuta la función
     conn = get_db_connection()
