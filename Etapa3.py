@@ -130,7 +130,7 @@ inventario = Inventario()   # Instanciamos un inventario
 
 # 2 - Ruta para obtener los datos de un producto según su matricula
 # GET: envía la información haciéndola visible en la URL de la página web.
-@app.route('/profesionales/<int:matricula>', methods=['GET'])
+@app.route('/profesional/<int:matricula>', methods=['GET'])
 def obtener_profesional(matricula):
     profesional = inventario.consultar_profesional(matricula)
     if profesional:
@@ -146,13 +146,13 @@ def obtener_profesional(matricula):
     return jsonify({'message': 'Profesional no encontrado.'}), 404
 
 # 3 - Ruta para obtener la lista de Profesional del inventario
-@app.route('/profesionales', methods=['GET'])
+@app.route('/profesional', methods=['GET'])
 def obtener_profesionales():
     return inventario.listar_profesionales()
 
 # 4 - Ruta para agregar un Profesional al inventario
 # POST: envía la información ocultándola del usuario.
-@app.route('/profesionales', methods=['POST'])
+@app.route('/profesional', methods=['POST'])
 def agregar_profesional():
     matricula = request.json.get('matricula')
     apellido_nombre = request.json.get('apellido_nombre')
@@ -165,7 +165,7 @@ def agregar_profesional():
 
 # 5 - Ruta para modificar un Profesional del inventario
 # PUT: permite actualizar información.
-@app.route('/profesionales/<int:matricula>', methods=['PUT'])
+@app.route('/profesional/<int:matricula>', methods=['PUT'])
 def modificar_profesional(matricula):
     nuevo_apellido_nombre = request.json.get('apellido_nombre')
     nuevo_dni = request.json.get('dni')
@@ -177,7 +177,7 @@ def modificar_profesional(matricula):
 
 # 6 - Ruta para eliminar un Profesional del inventario
 # DELETE: permite eliminar información.
-@app.route('/profesionales/<int:matricula>', methods=['DELETE'])
+@app.route('/profesional/<int:matricula>', methods=['DELETE'])
 def eliminar_profesional(matricula):
     return inventario.eliminar_profesional(matricula)
 
