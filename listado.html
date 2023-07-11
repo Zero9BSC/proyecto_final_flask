@@ -17,7 +17,7 @@
         <thead>
             <tr>
                 <th>matricula Nacional</th>
-                <th>Apellido-Nombre</th>
+                <th>apellido_nombre</th>
                 <th>dni</th>
                 <th>cuit</th>
                 <th>profesion</th>
@@ -55,7 +55,7 @@
                 data.forEach(function (producto) {
                     var fila = document.createElement('tr');
                     fila.innerHTML = '<td>' + Profesional.matricula + '</td>' +
-                        '<td>' + Profesional.apellidoNombre + '</td>' +
+                        '<td>' + Profesional.apellido_nombre + '</td>' +
                         '<td align="right">' + Profesional.dni + '</td>' +
                         '<td align="right">&nbsp; &nbsp;&nbsp; &nbsp;' + profesional.cuit + '</td>'
                         '<td align="right">&nbsp; &nbsp;&nbsp; &nbsp;' + profesional.profesion + '</td>'

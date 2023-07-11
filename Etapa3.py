@@ -46,17 +46,17 @@ create_database()
 # Definimos la clase "Profesional"
 # -------------------------------------------------------------------
 class Profesional:
-    def __init__(self, matricula, apellidoNombre, dni, cuit, profesion, celular, mail):
+    def __init__(self, matricula, apellido_nombre, dni, cuit, profesion, celular, mail):
         self.matricula = matricula
-        self.apellidoNombre = apellidoNombre
+        self.apellido_nombre = apellido_nombre
         self.dni = dni
         self.cuit = cuit
         self.profesion = profesion
         self.celular = celular
         self.mail = mail
 
-    def modificar(self, nuevo_apellidoNombre, nuevo_dni, nuevo_cuit, nueva_profesion, nuevo_celular, nuevo_mail):
-        self.apellidoNombre = nuevo_apellidoNombre
+    def modificar(self, nuevo_apellido_nombre, nuevo_dni, nuevo_cuit, nueva_profesion, nuevo_celular, nuevo_mail):
+        self.apellido_nombre = nuevo_apellido_nombre
         self.dni = nuevo_dni
         self.cuit = nuevo_cuit
         self.profesion = nueva_profesion
@@ -72,12 +72,12 @@ class Inventario:
         self.conexion = get_db_connection()
         self.cursor = self.conexion.cursor()
 
-    def agregar_profesional(self, matricula, apellidoNombre, dni, cuit, profesion, celular, mail):
+    def agregar_profesional(self, matricula, apellido_nombre, dni, cuit, profesion, celular, mail):
         profesional_existente = self.consultar_profesional(matricula)
         if profesional_existente:
             return jsonify({'message': 'Ya existe un profesional con esa matricula.'}), 400
 
-        self.cursor.execute("INSERT INTO profesional VALUES (?, ?, ?, ?, ?, ?, ?)", (matricula, apellidoNombre, dni, cuit, profesion, celular, mail))
+        self.cursor.execute("INSERT INTO profesional VALUES (?, ?, ?, ?, ?, ?, ?)", (matricula, apellido_nombre, dni, cuit, profesion, celular, mail))
         self.conexion.commit()
         return jsonify({'message': 'Profesional agregado correctamente.'}), 200
 
@@ -85,16 +85,16 @@ class Inventario:
         self.cursor.execute("SELECT * FROM profesional WHERE matricula = ?", (matricula))
         row = self.cursor.fetchone()
         if row:
-            matricula, apellidoNombre, dni, cuit, profesion, celular, mail = row
-            return Profesional(matricula, apellidoNombre, dni, cuit, profesion, celular, mail)
+            matricula, apellido_nombre, dni, cuit, profesion, celular, mail = row
+            return Profesional(matricula, apellido_nombre, dni, cuit, profesion, celular, mail)
         return None
 
-    def modificar_profesional(self, matricula, nuevo_apellidoNombre, nuevo_dni, nuevo_cuit, nueva_profesion, nuevo_celular, nuevo_mail):
+    def modificar_profesional(self, matricula, nuevo_apellido_nombre, nuevo_dni, nuevo_cuit, nueva_profesion, nuevo_celular, nuevo_mail):
         profesional = self.consultar_profesional(matricula)
         if profesional:
-            profesional.modificar(nuevo_apellidoNombre, nuevo_dni, nuevo_cuit, nueva_profesion, nuevo_celular, nuevo_mail)
-            self.cursor.execute("UPDATE profesion SET apellidoNombre = ?, dni = ?, cuit = ?, profesion = ?, celular = ?, mail = ? WHERE matricula = ?",
-                                (nuevo_apellidoNombre, nuevo_dni, nuevo_cuit, nueva_profesion, nuevo_celular, nuevo_mail,  matricula))
+            profesional.modificar(nuevo_apellido_nombre, nuevo_dni, nuevo_cuit, nueva_profesion, nuevo_celular, nuevo_mail)
+            self.cursor.execute("UPDATE profesion SET apellido_nombre = ?, dni = ?, cuit = ?, profesion = ?, celular = ?, mail = ? WHERE matricula = ?",
+                                (nuevo_apellido_nombre, nuevo_dni, nuevo_cuit, nueva_profesion, nuevo_celular, nuevo_mail,  matricula))
             self.conexion.commit()
             return jsonify({'message': 'Profesional modificado correctamente.'}), 200
         return jsonify({'message': 'Profesional no encontrado.'}), 404
@@ -104,8 +104,8 @@ class Inventario:
         rows = self.cursor.fetchall()
         profesional = []
         for row in rows:
-            matricula, apellidoNombre, dni, cuit, profesion, celular, mail = row
-            profesional = {'matricula': matricula, 'apellidoNombre': apellidoNombre, 'dni': dni, 'cuit': cuit, 'profesion': profesion, 'celular': celular, 'mail': mail}
+            matricula, apellido_nombre, dni, cuit, profesion, celular, mail = row
+            profesional = {'matricula': matricula, 'apellido_nombre': apellido_nombre, 'dni': dni, 'cuit': cuit, 'profesion': profesion, 'celular': celular, 'mail': mail}
             profesional.append(profesional)
         return jsonify(profesional), 200
 
@@ -136,7 +136,7 @@ def obtener_profesional(matricula):
     if profesional:
         return jsonify({
             'matricula': profesional.matricula,
-            'apellidoNombre': profesional.apellidoNombre,
+            'apellido_nombre': profesional.apellido_nombre,
             'dni': profesional.dni,
             'cuit': profesional.cuit,
             'profesion': profesional.profesion,
@@ -155,26 +155,26 @@ def obtener_profesionales():
 @app.route('/profesional', methods=['POST'])
 def agregar_profesional():
     matricula = request.json.get('matricula')
-    apellidoNombre = request.json.get('apellidoNombre')
+    apellido_nombre = request.json.get('apellido_nombre')
     dni = request.json.get('dni')
     cuit = request.json.get('cuit')
     profesion = request.json.get('profesion')
     celular = request.json.get('celular')
     mail = request.json.get('mail')
 
-    return inventario.agregar_profesional(matricula, apellidoNombre, dni, cuit, profesion, celular, mail)
+    return inventario.agregar_profesional(matricula, apellido_nombre, dni, cuit, profesion, celular, mail)
 
 # 5 - Ruta para modificar un Profesional del inventario
 # PUT: permite actualizar información.
 @app.route('/profesional/<int:matricula>', methods=['PUT'])
 def modificar_profesional(matricula):
-    nuevo_apellidoNombre = request.json.get('apellidoNombre')
+    nuevo_apellido_nombre = request.json.get('apellido_nombre')
     nuevo_dni = request.json.get('dni')
     nuevo_cuit = request.json.get('cuit')
     nueva_profesion = request.json.get('profesion')
     nuevo_celular = request.json.get('celular')
     nuevo_mail = request.json.get('mail')
-    return inventario.modificar_profesional(matricula, nuevo_apellidoNombre, nuevo_dni, nuevo_cuit, nueva_profesion, nuevo_celular, nuevo_mail )
+    return inventario.modificar_profesional(matricula, nuevo_apellido_nombre, nuevo_dni, nuevo_cuit, nueva_profesion, nuevo_celular, nuevo_mail )
 
 # 6 - Ruta para eliminar un Profesional del inventario
 # DELETE: permite eliminar información.
