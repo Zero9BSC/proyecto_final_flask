@@ -16,14 +16,13 @@
     <table>
         <thead>
             <tr>
-                <th>Matrícula Nacional</th>
+                <th>matricula Nacional</th>
                 <th>Apellido-Nombre</th>
-                <th>DNI</th>
-                <th>CUIT</th>
-                <th>Profesión</th>
-                <th>Celular</th>
+                <th>dni</th>
+                <th>cuit</th>
+                <th>profesion</th>
+                <th>celular</th>
                 <th>mail</th>
-                
             </tr>
         </thead>
         <tbody id="tablaProfesional">
@@ -55,13 +54,13 @@
                 // Iteramos sobre los profesionales y agregamos filas a la tabla
                 data.forEach(function (producto) {
                     var fila = document.createElement('tr');
-                    fila.innerHTML = '<td>' + Profesional.Matrícula + '</td>' +
-                        '<td>' + Profesional.ApellidoNombre + '</td>' +
-                        '<td align="right">' + Profesional.DNI + '</td>' +
-                        '<td align="right">&nbsp; &nbsp;&nbsp; &nbsp;' + Profesional.CUIT + '</td>'
-                        '<td align="right">&nbsp; &nbsp;&nbsp; &nbsp;' + Profesional.Profesión + '</td>'
-                        '<td align="right">&nbsp; &nbsp;&nbsp; &nbsp;' + Profesional.Celular + '</td>'
-                        '<td align="right">&nbsp; &nbsp;&nbsp; &nbsp;' + Profesional.mail + '</td>';
+                    fila.innerHTML = '<td>' + Profesional.matricula + '</td>' +
+                        '<td>' + Profesional.apellidoNombre + '</td>' +
+                        '<td align="right">' + Profesional.dni + '</td>' +
+                        '<td align="right">&nbsp; &nbsp;&nbsp; &nbsp;' + profesional.cuit + '</td>'
+                        '<td align="right">&nbsp; &nbsp;&nbsp; &nbsp;' + profesional.profesion + '</td>'
+                        '<td align="right">&nbsp; &nbsp;&nbsp; &nbsp;' + profesional.celular + '</td>'
+                        '<td align="right">&nbsp; &nbsp;&nbsp; &nbsp;' + profesional.mail + '</td>';
                     tablaProfesional.appendChild(fila);
                 });
             })

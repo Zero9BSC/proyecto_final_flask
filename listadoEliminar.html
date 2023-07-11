@@ -16,23 +16,27 @@
     <table>
         <thead>
             <tr>
-                <th>Matrícula Nacional</th>
+                <th>matricula Nacional</th>
                 <th>Apellido-Nombre</th>
-                <th>DNI</th>
-                <th>CUIT</th>
-                <th>Profesión</th>
-                <th>Celular</th>
+                <th>dni</th>
+                <th>cuit</th>
+                <th>profesion</th>
+                <th>celular</th>
                 <th>mail</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             <tr v-for="producto in productos">
-                <td>{{ producto.codigo }}</td>
-                <td>{{ producto.descripcion }}</td>
-                <td>{{ producto.cantidad }}</td>
-                <td align="right">{{ producto.precio }}</td>
-                <td><button @click="eliminarProducto(producto.codigo)">Eliminar</button></td>
+                <td>{{ profesional.matricula }}</td>
+                <td>{{ profesional.apellidoNombre }}</td>
+                <td>{{ profesional.profesional }}</td>
+                <td>{{ profesional.dni }}</td>
+                <td>{{ profesional.cuit }}</td>
+                <td>{{ profesional.celular }}</td>
+                <td>{{ profesional.celular }}</td>
+                <td align="right">{{ profesional.precio }}</td>
+                <td><button @click="eliminar_profesional(producto.matricula)">Eliminar</button></td>
             </tr>
         </tbody>
     </table>
@@ -49,13 +53,13 @@
         const app = Vue.createApp({
             data() {
                 return {
-                    productos: []
+                    profesionales: []
                 }
             },
             methods: {
                 obtenerProductos() {
                     // Obtenemos el contenido del inventario
-                    fetch(URL + 'productos')
+                    fetch(URL + 'profesional')
                         .then(response => {
                             if (response.ok) {
                                 return response.json(); // Parseamos la respuesta JSON
@@ -76,11 +80,11 @@
                 },
                 eliminarProducto(codigo) {
                     // Eliminamos el producto de la fila seleccionada
-                    fetch(URL + `productos/${codigo}`, { method: 'DELETE' })
+                    fetch(URL + `profesional/${codigo}`, { method: 'DELETE' })
                         .then(response => {
                             if (response.ok) {
                                 // Eliminar el producto de la lista después de eliminarlo en el servidor
-                                this.productos = this.productos.filter(producto => producto.codigo !== codigo);
+                                this.profesional = this.profesional.filter(producto => producto.codigo !== codigo);
                                 console.log('Producto eliminado correctamente.');
                             } else {
                                 // Si hubo un error, lanzar explícitamente una excepción
@@ -95,7 +99,7 @@
                 }
             },
             mounted() {
-                //Al cargar la página, obtenemos la lista de productos
+                //Al cargar la página, obtenemos la lista de profesional
                 this.obtenerProductos();
             }
         });

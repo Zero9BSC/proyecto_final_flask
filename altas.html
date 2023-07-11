@@ -14,26 +14,26 @@
     <div class="img"><img src="img/logo_codo.png" alt="codoacodo" width="100px"></div>
     <h3>Codo a Codo 2023</h3>
     <form id="formulario">
-        <label for="Matrícula Nacional">Matrícula Nacional:</label>
-        <input type="text" id="Matrícula Nacional" name="Matrícula Nacional" required><br>
+        <label for="matricula Nacional">Matrícula Nacional:</label>
+        <input type="number" id="matricula Nacional" name="matricula Nacional" required><br>
 
-        <label for="Apellido-Nombre">Apellido-Nombre:</label>
+        <label for="Apellido-Nombre">Apellido y Nombre:</label>
         <input type="text" id="Apellido-Nombre" name="Apellido-Nombre" required><br>
 
-        <label for="DNI">DNI:</label>
-        <input type="number" id="DNI" name="DNI" required><br>
+        <label for="dni">dni:</label>
+        <input type="number" id="dni" name="dni" required><br>
 
-        <label for="CUIT">CUIT:</label>
-        <input type="number" id="CUIT" name="CUIT" required><br>
+        <label for="cuit">cuit:</label>
+        <input type="number" id="cuit" name="cuit" required><br>
 
-        <label for="Profesión">Profesión:</label>
-        <input type="text" id="Profesión" name="Profesión" required><br>
+        <label for="profesion">profesion:</label>
+        <input type="text" id="profesion" name="profesion" required><br>
 
-        <label for="Celular">Celular:</label>
-        <input type="Celular" id="Celular" name="Celular" required><br>
+        <label for="celular">celular:</label>
+        <input type="number" id="celular" name="celular" required><br>
 
         <label for="mail">mail:</label>
-        <input type="mail" id="mail" name="mail" required><br>
+        <input type="text" id="mail" name="mail" required><br>
 
         
 
@@ -49,23 +49,23 @@
             event.preventDefault(); // Evitamos que se envie el form por ahora
 
             // Obtenemos los valores del formulario
-            var Matrícula = document.getElementById('Matrícula Nacional').value;
-            var ApellidoNombre = document.getElementById('Apellido-Nombre').value;
-            var DNI = document.getElementById('DNI').value;
-            var CUIT = document.getElementById('CUIT').value;
-            var Profesión = document.getElementById('Profesión').value;
-            var Celular = document.getElementById('Celular').value;
+            var matricula = document.getElementById('matricula Nacional').value;
+            var apellidoNombre = document.getElementById('Apellido-Nombre').value;
+            var dni = document.getElementById('dni').value;
+            var cuit = document.getElementById('cuit').value;
+            var profesion = document.getElementById('profesion').value;
+            var celular = document.getElementById('celular').value;
             var mail = document.getElementById('mail').value;
 
             // Creamos un objeto con los datos del producto
             var profesional = {
-                Matrícula: Matrícula,
-                ApellidoNombre: ApellidoNombre,
-                DNI: DNI,
-                CUIT: CUIT,
-                Profesión: Profesión,
-                Celular: Celular,
-                mail:mail,
+                matricula: matricula,
+                apellidoNombre: apellidoNombre,
+                dni: dni,
+                cuit: cuit,
+                profesion: profesion,
+                celular: celular,
+                mail:mail
             };
             console.log(profesional)
             // Realizamos la solicitud POST al servidor
@@ -89,12 +89,12 @@
                 .then(function (data) {
                     alert('Profesional agregado correctamente.');
                     //Limpiamos el formulario.
-                    document.getElementById('Matrícula Nacional').value = "";
-                    document.getElementById('Apellido-Nombre').value = "";
-                    document.getElementById('DNI').value = "";
-                    document.getElementById('CUIT').value = "";
-                    document.getElementById('Profesión').value = "";
-                    document.getElementById('Celular').value = "";
+                    document.getElementById('matricula').value = "";
+                    document.getElementById('apellidoNombre').value = "";
+                    document.getElementById('dni').value = "";
+                    document.getElementById('cuit').value = "";
+                    document.getElementById('profesion').value = "";
+                    document.getElementById('celular').value = "";
                     document.getElementById('mail').value = "";
 
                     
