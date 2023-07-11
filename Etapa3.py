@@ -102,12 +102,12 @@ class Inventario:
     def listar_profesionales(self):
         self.cursor.execute("SELECT * FROM profesional")
         rows = self.cursor.fetchall()
-        profesional = []
+        profesionales = []
         for row in rows:
             matricula, apellido_nombre, dni, cuit, profesion, celular, mail = row
             profesional = {'matricula': matricula, 'apellido_nombre': apellido_nombre, 'dni': dni, 'cuit': cuit, 'profesion': profesion, 'celular': celular, 'mail': mail}
-            profesional.append(profesional)
-        return jsonify(profesional), 200
+            profesionales.append(profesional)
+        return jsonify(profesionales), 200
 
     def eliminar_profesional(self, matricula):
         self.cursor.execute("DELETE FROM profesional WHERE matricula = ?", (matricula))
@@ -130,7 +130,7 @@ inventario = Inventario()   # Instanciamos un inventario
 
 # 2 - Ruta para obtener los datos de un producto según su matricula
 # GET: envía la información haciéndola visible en la URL de la página web.
-@app.route('/profesional/<int:matricula>', methods=['GET'])
+@app.route('/profesionales/<int:matricula>', methods=['GET'])
 def obtener_profesional(matricula):
     profesional = inventario.consultar_profesional(matricula)
     if profesional:
@@ -146,13 +146,13 @@ def obtener_profesional(matricula):
     return jsonify({'message': 'Profesional no encontrado.'}), 404
 
 # 3 - Ruta para obtener la lista de Profesional del inventario
-@app.route('/profesional', methods=['GET'])
+@app.route('/profesionales', methods=['GET'])
 def obtener_profesionales():
     return inventario.listar_profesionales()
 
 # 4 - Ruta para agregar un Profesional al inventario
 # POST: envía la información ocultándola del usuario.
-@app.route('/profesional', methods=['POST'])
+@app.route('/profesionales', methods=['POST'])
 def agregar_profesional():
     matricula = request.json.get('matricula')
     apellido_nombre = request.json.get('apellido_nombre')
@@ -161,12 +161,11 @@ def agregar_profesional():
     profesion = request.json.get('profesion')
     celular = request.json.get('celular')
     mail = request.json.get('mail')
-
     return inventario.agregar_profesional(matricula, apellido_nombre, dni, cuit, profesion, celular, mail)
 
 # 5 - Ruta para modificar un Profesional del inventario
 # PUT: permite actualizar información.
-@app.route('/profesional/<int:matricula>', methods=['PUT'])
+@app.route('/profesionales/<int:matricula>', methods=['PUT'])
 def modificar_profesional(matricula):
     nuevo_apellido_nombre = request.json.get('apellido_nombre')
     nuevo_dni = request.json.get('dni')
@@ -178,7 +177,7 @@ def modificar_profesional(matricula):
 
 # 6 - Ruta para eliminar un Profesional del inventario
 # DELETE: permite eliminar información.
-@app.route('/profesional/<int:matricula>', methods=['DELETE'])
+@app.route('/profesionales/<int:matricula>', methods=['DELETE'])
 def eliminar_profesional(matricula):
     return inventario.eliminar_profesional(matricula)
 

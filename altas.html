@@ -14,8 +14,8 @@
     <div class="img"><img src="./img/healthcare_hearts.png" alt="healthy_hearts" width="350px"></div>
     <h3>Codo a Codo 2023</h3>
     <form id="formulario">
-        <label for="matricula Nacional">Matrícula Nacional:</label>
-        <input type="number" id="matricula Nacional" name="matricula Nacional" required><br>
+        <label for="matricula">Matrícula Nacional:</label>
+        <input type="number" id="matricula" name="matricula" required><br>
 
         <label for="apellido_nombre">Apellido y Nombre:</label>
         <input type="text" id="apellido_nombre" name="apellido_nombre" required><br>
@@ -49,7 +49,7 @@
             event.preventDefault(); // Evitamos que se envie el form por ahora
 
             // Obtenemos los valores del formulario
-            var matricula = document.getElementById('matricula Nacional').value;
+            var matricula = document.getElementById('matricula').value;
             var apellido_nombre = document.getElementById('apellido_nombre').value;
             var dni = document.getElementById('dni').value;
             var cuit = document.getElementById('cuit').value;
