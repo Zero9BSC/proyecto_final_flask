@@ -178,12 +178,32 @@ def modificar_profesional(matricula):
 
 # 6 - Ruta para eliminar un Profesional del inventario
 # DELETE: permite eliminar información.
-@app.route('/profesional/<int:matricula>', methods=['DELETE'])
-def eliminar_Profesional(matricula):
-    return inventario.eliminar_Profesional(matricula)
+@app.route('/productos/<int:codigo>', methods=['DELETE'])
+def eliminar_producto(codigo):
+    return inventario.eliminar_producto(codigo)
 
+# 7 - Ruta para agregar un producto al carrito
+@app.route('/carrito', methods=['POST'])
+def agregar_carrito():
+    codigo = request.json.get('codigo')
+    cantidad = request.json.get('cantidad')
+    inventario = Inventario()
+    return carrito.agregar(codigo, cantidad, inventario)
 
-# 7 - Ruta para obtener el index
+# 8 - Ruta para quitar un producto del carrito
+@app.route('/carrito', methods=['DELETE'])
+def quitar_carrito():
+    codigo = request.json.get('codigo')
+    cantidad = request.json.get('cantidad')
+    inventario = Inventario()
+    return carrito.quitar(codigo, cantidad, inventario)
+
+# 9 - Ruta para obtener el contenido del carrito
+@app.route('/carrito', methods=['GET'])
+def obtener_carrito():
+    return carrito.mostrar()
+
+# 10 - Ruta para obtener el index
 @app.route('/')
 def index():
     return 'API de Inventario'
