@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, jsonify, request
+from flask import Flask,  jsonify, request
 from flask_cors import CORS
 
 
@@ -12,20 +12,17 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-# Crear la tabla 'profesional' si no existe
+# Crear la tabla 'productos' si no existe
 def create_table():
-    print("Creando tabla Profesionales...") # Para probar que se ejecuta la función
+    print("Creando tabla productos...") # Para probar que se ejecuta la función
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS profesional (
-            matricula INTEGER PRIMARY KEY,
-            apellido_nombre TEXT NOT NULL,
-            dni INTEGER NOT NULL,
-            cuit INTEGER NOT NULL,
-            profesion TEXT NOT NULL,
-            celular INTEGER NOT NULL,
-            mail TEXT NOT NULL
+        CREATE TABLE IF NOT EXISTS productos (
+            codigo INTEGER PRIMARY KEY,
+            descripcion TEXT NOT NULL,
+            cantidad INTEGER NOT NULL,
+            precio REAL NOT NULL
         )
     ''')
     conn.commit()
@@ -43,25 +40,19 @@ def create_database():
 create_database()
 
 # -------------------------------------------------------------------
-# Definimos la clase "Profesional"
+# Definimos la clase "Producto"
 # -------------------------------------------------------------------
-class Profesional:
-    def __init__(self, matricula, apellido_nombre, dni, cuit, profesion, celular, mail):
-        self.matricula = matricula
-        self.apellido_nombre = apellido_nombre
-        self.dni = dni
-        self.cuit = cuit
-        self.profesion = profesion
-        self.celular = celular
-        self.mail = mail
+class Producto:
+    def __init__(self, codigo, descripcion, cantidad, precio):
+        self.codigo = codigo
+        self.descripcion = descripcion
+        self.cantidad = cantidad
+        self.precio = precio
 
-    def modificar(self, nuevo_apellido_nombre, nuevo_dni, nuevo_cuit, nueva_profesion, nuevo_celular, nuevo_mail):
-        self.apellido_nombre = nuevo_apellido_nombre
-        self.dni = nuevo_dni
-        self.cuit = nuevo_cuit
-        self.profesion = nueva_profesion
-        self.celular = nuevo_celular
-        self.mail = nuevo_mail
+    def modificar(self, nueva_descripcion, nueva_cantidad, nuevo_precio):
+        self.descripcion = nueva_descripcion
+        self.cantidad = nueva_cantidad
+        self.precio = nuevo_precio
 
 
 # -------------------------------------------------------------------
@@ -72,50 +63,105 @@ class Inventario:
         self.conexion = get_db_connection()
         self.cursor = self.conexion.cursor()
 
-    def agregar_profesional(self, matricula, apellido_nombre, dni, cuit, profesion, celular, mail):
-        profesional_existente = self.consultar_profesional(matricula)
-        if profesional_existente:
-            return jsonify({'message': 'Ya existe un profesional con esa matricula.'}), 400
+    def agregar_producto(self, codigo, descripcion, cantidad, precio):
+        producto_existente = self.consultar_producto(codigo)
+        if producto_existente:
+            return jsonify({'message': 'Ya existe un producto con ese código.'}), 400
 
-        self.cursor.execute("INSERT INTO profesional VALUES (?, ?, ?, ?, ?, ?, ?)", (matricula, apellido_nombre, dni, cuit, profesion, celular, mail))
+        #nuevo_producto = Producto(codigo, descripcion, cantidad, precio)
+        self.cursor.execute("INSERT INTO productos VALUES (?, ?, ?, ?)", (codigo, descripcion, cantidad, precio))
         self.conexion.commit()
-        return jsonify({'message': 'Profesional agregado correctamente.'}), 200
+        return jsonify({'message': 'Producto agregado correctamente.'}), 200
 
-    def consultar_profesional(self, matricula):
-        self.cursor.execute("SELECT * FROM profesional WHERE matricula = ?", (matricula))
+    def consultar_producto(self, codigo):
+        self.cursor.execute("SELECT * FROM productos WHERE codigo = ?", (codigo,))
         row = self.cursor.fetchone()
         if row:
-            matricula, apellido_nombre, dni, cuit, profesion, celular, mail = row
-            return Profesional(matricula, apellido_nombre, dni, cuit, profesion, celular, mail)
+            codigo, descripcion, cantidad, precio = row
+            return Producto(codigo, descripcion, cantidad, precio)
         return None
 
-    def modificar_profesional(self, matricula, nuevo_apellido_nombre, nuevo_dni, nuevo_cuit, nueva_profesion, nuevo_celular, nuevo_mail):
-        profesional = self.consultar_profesional(matricula)
-        if profesional:
-            profesional.modificar(nuevo_apellido_nombre, nuevo_dni, nuevo_cuit, nueva_profesion, nuevo_celular, nuevo_mail)
-            self.cursor.execute("UPDATE profesion SET apellido_nombre = ?, dni = ?, cuit = ?, profesion = ?, celular = ?, mail = ? WHERE matricula = ?",
-                                (nuevo_apellido_nombre, nuevo_dni, nuevo_cuit, nueva_profesion, nuevo_celular, nuevo_mail,  matricula))
+    def modificar_producto(self, codigo, nueva_descripcion, nueva_cantidad, nuevo_precio):
+        producto = self.consultar_producto(codigo)
+        if producto:
+            producto.modificar(nueva_descripcion, nueva_cantidad, nuevo_precio)
+            self.cursor.execute("UPDATE productos SET descripcion = ?, cantidad = ?, precio = ? WHERE codigo = ?",
+                                (nueva_descripcion, nueva_cantidad, nuevo_precio, codigo))
             self.conexion.commit()
-            return jsonify({'message': 'Profesional modificado correctamente.'}), 200
-        return jsonify({'message': 'Profesional no encontrado.'}), 404
+            return jsonify({'message': 'Producto modificado correctamente.'}), 200
+        return jsonify({'message': 'Producto no encontrado.'}), 404
 
-    def listar_profesionales(self):
-        self.cursor.execute("SELECT * FROM profesional")
+    def listar_productos(self):
+        self.cursor.execute("SELECT * FROM productos")
         rows = self.cursor.fetchall()
-        profesionales = []
+        productos = []
         for row in rows:
-            matricula, apellido_nombre, dni, cuit, profesion, celular, mail = row
-            profesional = {'matricula': matricula, 'apellido_nombre': apellido_nombre, 'dni': dni, 'cuit': cuit, 'profesion': profesion, 'celular': celular, 'mail': mail}
-            profesionales.append(profesional)
-        return jsonify(profesionales), 200
+            codigo, descripcion, cantidad, precio = row
+            producto = {'codigo': codigo, 'descripcion': descripcion, 'cantidad': cantidad, 'precio': precio}
+            productos.append(producto)
+        return jsonify(productos), 200
 
-    def eliminar_profesional(self, matricula):
-        self.cursor.execute("DELETE FROM profesional WHERE matricula = ?", (matricula))
+    def eliminar_producto(self, codigo):
+        self.cursor.execute("DELETE FROM productos WHERE codigo = ?", (codigo,))
         if self.cursor.rowcount > 0:
             self.conexion.commit()
-            return jsonify({'message': 'Profesional eliminado correctamente.'}), 200
-        return jsonify({'message': 'Profesional no encontrado.'}), 404
+            return jsonify({'message': 'Producto eliminado correctamente.'}), 200
+        return jsonify({'message': 'Producto no encontrado.'}), 404
 
+
+# -------------------------------------------------------------------
+# Definimos la clase "Carrito"
+# -------------------------------------------------------------------
+class Carrito:
+    def __init__(self):
+        self.conexion = get_db_connection()
+        self.cursor = self.conexion.cursor()
+        self.items = []
+
+    def agregar(self, codigo, cantidad, inventario):
+        producto = inventario.consultar_producto(codigo)
+        if producto is None:
+            return jsonify({'message': 'El producto no existe.'}), 404
+        if producto.cantidad < cantidad:
+            return jsonify({'message': 'Cantidad en stock insuficiente.'}), 400
+
+        for item in self.items:
+            if item.codigo == codigo:
+                item.cantidad += cantidad
+                self.cursor.execute("UPDATE productos SET cantidad = cantidad - ? WHERE codigo = ?",
+                                    (cantidad, codigo))
+                self.conexion.commit()
+                return jsonify({'message': 'Producto agregado al carrito correctamente.'}), 200
+
+        nuevo_item = Producto(codigo, producto.descripcion, cantidad, producto.precio)
+        self.items.append(nuevo_item)
+        self.cursor.execute("UPDATE productos SET cantidad = cantidad - ? WHERE codigo = ?",
+                            (cantidad, codigo))
+        self.conexion.commit()
+        return jsonify({'message': 'Producto agregado al carrito correctamente.'}), 200
+
+    def quitar(self, codigo, cantidad, inventario):
+        for item in self.items:
+            if item.codigo == codigo:
+                if cantidad > item.cantidad:
+                    return jsonify({'message': 'Cantidad a quitar mayor a la cantidad en el carrito.'}), 400
+                item.cantidad -= cantidad
+                if item.cantidad == 0:
+                    self.items.remove(item)
+                self.cursor.execute("UPDATE productos SET cantidad = cantidad + ? WHERE codigo = ?",
+                                    (cantidad, codigo))
+                self.conexion.commit()
+                return jsonify({'message': 'Producto quitado del carrito correctamente.'}), 200
+
+        return jsonify({'message': 'El producto no se encuentra en el carrito.'}), 404
+
+    def mostrar(self):
+        productos_carrito = []
+        for item in self.items:
+            producto = {'codigo': item.codigo, 'descripcion': item.descripcion, 'cantidad': item.cantidad,
+                        'precio': item.precio}
+            productos_carrito.append(producto)
+        return jsonify(productos_carrito), 200
 
 
 # -------------------------------------------------------------------
@@ -126,63 +172,75 @@ class Inventario:
 app = Flask(__name__)
 CORS(app)
 
+carrito = Carrito()         # Instanciamos un carrito
 inventario = Inventario()   # Instanciamos un inventario
 
-# 2 - Ruta para obtener los datos de un producto según su matricula
+# 2 - Ruta para obtener los datos de un producto según su código
 # GET: envía la información haciéndola visible en la URL de la página web.
-@app.route('/profesional/<int:matricula>', methods=['GET'])
-def obtener_profesional(matricula):
-    profesional = inventario.consultar_profesional(matricula)
-    if profesional:
+@app.route('/productos/<int:codigo>', methods=['GET'])
+def obtener_producto(codigo):
+    producto = inventario.consultar_producto(codigo)
+    if producto:
         return jsonify({
-            'matricula': profesional.matricula,
-            'apellido_nombre': profesional.apellido_nombre,
-            'dni': profesional.dni,
-            'cuit': profesional.cuit,
-            'profesion': profesional.profesion,
-            'celular': profesional.celular,
-            'mail': profesional.mail
+            'codigo': producto.codigo,
+            'descripcion': producto.descripcion,
+            'cantidad': producto.cantidad,
+            'precio': producto.precio
         }), 200
-    return jsonify({'message': 'Profesional no encontrado.'}), 404
+    return jsonify({'message': 'Producto no encontrado.'}), 404
 
-# 3 - Ruta para obtener la lista de Profesional del inventario
-@app.route('/profesional', methods=['GET'])
-def obtener_profesionales():
-    return inventario.listar_profesionales()
+# 3 - Ruta para obtener la lista de productos del inventario
+@app.route('/productos', methods=['GET'])
+def obtener_productos():
+    return inventario.listar_productos()
 
-# 4 - Ruta para agregar un Profesional al inventario
+# 4 - Ruta para agregar un producto al inventario
 # POST: envía la información ocultándola del usuario.
-@app.route('/profesional', methods=['POST'])
-def agregar_profesional():
-    matricula = request.json.get('matricula')
-    apellido_nombre = request.json.get('apellido_nombre')
-    dni = request.json.get('dni')
-    cuit = request.json.get('cuit')
-    profesion = request.json.get('profesion')
-    celular = request.json.get('celular')
-    mail = request.json.get('mail')
-    return inventario.agregar_profesional(matricula, apellido_nombre, dni, cuit, profesion, celular, mail)
+@app.route('/productos', methods=['POST'])
+def agregar_producto():
+    codigo = request.json.get('codigo')
+    descripcion = request.json.get('descripcion')
+    cantidad = request.json.get('cantidad')
+    precio = request.json.get('precio')
+    return inventario.agregar_producto(codigo, descripcion, cantidad, precio)
 
-# 5 - Ruta para modificar un Profesional del inventario
+# 5 - Ruta para modificar un producto del inventario
 # PUT: permite actualizar información.
-@app.route('/profesional/<int:matricula>', methods=['PUT'])
-def modificar_profesional(matricula):
-    nuevo_apellido_nombre = request.json.get('apellido_nombre')
-    nuevo_dni = request.json.get('dni')
-    nuevo_cuit = request.json.get('cuit')
-    nueva_profesion = request.json.get('profesion')
-    nuevo_celular = request.json.get('celular')
-    nuevo_mail = request.json.get('mail')
-    return inventario.modificar_profesional(matricula, nuevo_apellido_nombre, nuevo_dni, nuevo_cuit, nueva_profesion, nuevo_celular, nuevo_mail )
+@app.route('/productos/<int:codigo>', methods=['PUT'])
+def modificar_producto(codigo):
+    nueva_descripcion = request.json.get('descripcion')
+    nueva_cantidad = request.json.get('cantidad')
+    nuevo_precio = request.json.get('precio')
+    return inventario.modificar_producto(codigo, nueva_descripcion, nueva_cantidad, nuevo_precio)
 
-# 6 - Ruta para eliminar un Profesional del inventario
+# 6 - Ruta para eliminar un producto del inventario
 # DELETE: permite eliminar información.
-@app.route('/profesional/<int:matricula>', methods=['DELETE'])
-def eliminar_profesional(matricula):
-    return inventario.eliminar_profesional(matricula)
+@app.route('/productos/<int:codigo>', methods=['DELETE'])
+def eliminar_producto(codigo):
+    return inventario.eliminar_producto(codigo)
 
+# 7 - Ruta para agregar un producto al carrito
+@app.route('/carrito', methods=['POST'])
+def agregar_carrito():
+    codigo = request.json.get('codigo')
+    cantidad = request.json.get('cantidad')
+    inventario = Inventario()
+    return carrito.agregar(codigo, cantidad, inventario)
 
-# 7 - Ruta para obtener el index
+# 8 - Ruta para quitar un producto del carrito
+@app.route('/carrito', methods=['DELETE'])
+def quitar_carrito():
+    codigo = request.json.get('codigo')
+    cantidad = request.json.get('cantidad')
+    inventario = Inventario()
+    return carrito.quitar(codigo, cantidad, inventario)
+
+# 9 - Ruta para obtener el contenido del carrito
+@app.route('/carrito', methods=['GET'])
+def obtener_carrito():
+    return carrito.mostrar()
+
+# 10 - Ruta para obtener el index
 @app.route('/')
 def index():
     return 'API de Inventario'
